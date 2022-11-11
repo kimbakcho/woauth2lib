@@ -10,7 +10,7 @@
     "buidlLib": "node build.js"
   },
   "files": [
-    "src/oAuth2LibPlugin"
+    "lib"
   ],
   "dependencies": {
     "pinia": "^2.0.23",
