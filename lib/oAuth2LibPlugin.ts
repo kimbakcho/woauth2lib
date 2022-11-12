@@ -89,6 +89,9 @@ async function getPublicKey(idToken: string) : Promise<any>{
     })
     let rsaPublicKey = null
     if(key){
+        console.log("getPublicKey")
+        console.log(key[0])
+        console.log(header.alg)
         rsaPublicKey= await jose.importJWK(key[0],header.alg)
     }else {
         throw Error("jwk key error")
