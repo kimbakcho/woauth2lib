@@ -89,10 +89,11 @@ async function getPublicKey(idToken: string) : Promise<any>{
     })
     let rsaPublicKey = null
     if(key){
-        console.log("getPublicKey")
+        console.log("getPublicKey1")
         console.log(key[0])
         console.log(header.alg)
         rsaPublicKey= await jose.importJWK(key[0],header.alg)
+        console.log("getPublicKey2")
     }else {
         throw Error("jwk key error")
     }
@@ -132,7 +133,9 @@ export async function setupRedirect () {
         localStorage.setItem("wTokenOpenid",idToken)
         localStorage.setItem("wReToken",res.data.refresh_token)
         rsaPublicKey = await getPublicKey(idToken)
+        console.log("setupRedirect1")
         await setUpLoginUser(idToken,rsaPublicKey)
+        console.log("setupRedirect2")
         if(refreshTokenSch>=0){
             clearTimeout(refreshTokenSch)
         }
