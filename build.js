@@ -1,5 +1,4 @@
 let fs = require('fs');
-let dir = './dist';
 const path = require("path")
 
 // if (!fs.existsSync(dir)){
@@ -10,8 +9,11 @@ var copyRecursiveSync = function(src, dest) {
     var exists = fs.existsSync(src);
     var stats = exists && fs.statSync(src);
     var isDirectory = exists && stats.isDirectory();
-    if (isDirectory) {
+    var existsdst = fs.existsSync(dest);
+    if(!existsdst){
         fs.mkdirSync(dest);
+    }
+    if (isDirectory) {
         fs.readdirSync(src).forEach(function(childItemName) {
             copyRecursiveSync(path.join(src, childItemName),
                 path.join(dest, childItemName));
