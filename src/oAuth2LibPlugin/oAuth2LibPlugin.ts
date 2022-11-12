@@ -108,7 +108,9 @@ export async function setupRedirect () {
             refresh_token: string,
             scope: string,
             token_type: string
-        }>(oauth2Info.token_uri, formData)
+        }>(oauth2Info.token_uri, formData,{
+            withCredentials: false
+        })
         let idToken = res.data.id_token;
         localStorage.setItem("wTokenOpenid",idToken)
         localStorage.setItem("wReToken",res.data.refresh_token)
@@ -128,7 +130,9 @@ async function revokeReFreshToken(){
         if(reToken && oauth2Info.tokenRevoke_uri) {
             const fomData = new FormData()
             fomData.append("token",reToken)
-            await axios.post(oauth2Info.tokenRevoke_uri,fomData)
+            await axios.post(oauth2Info.tokenRevoke_uri,fomData,{
+                withCredentials: false
+            })
         }
     }catch (e) {
         throw e
@@ -156,7 +160,9 @@ async function reFreshTokenLogin() {
     formData.append("grant_type","refresh_token")
     formData.append("refresh_token",reFreshToken!)
     try{
-        const token = await axios.post(oauth2Info.token_uri!,formData)
+        const token = await axios.post(oauth2Info.token_uri!,formData,{
+            withCredentials: false
+        })
         if(token.data.error){
             await removeToken()
             return
@@ -181,7 +187,9 @@ function reTokenSch(){
 }
 
 export async function logoutOauth2Complete() {
-    await axios.post(`${oauth2Info.authServerLogout_uri}`)
+    await axios.post(`${oauth2Info.authServerLogout_uri}`,null,{
+        withCredentials: true
+    })
     await removeToken()
 
     if(refreshTokenSch>=0){
