@@ -1,10 +1,9 @@
 import type {App} from "@vue/runtime-core";
 import {createPinia, defineStore, getActivePinia} from "pinia";
-import {inject, ref} from "vue";
+import {ref} from "vue";
 
 import axios from "axios";
 import * as jose from 'jose'
-import type {KeyLike} from "jose/dist/types/types";
 
 export type UserResDto = {
     department: string|null,
@@ -79,7 +78,7 @@ export function goLogInPage () {
         `scope=openid`
 }
 
-async function getPublicKey(idToken: string) : Promise<KeyLike | Uint8Array>{
+async function getPublicKey(idToken: string) : Promise<any>{
     const sToken = idToken.split(".");
     const header: any = JSON.parse(atob(sToken[0]))
     const payload: any = JSON.parse(atob(sToken[1]))
@@ -99,7 +98,7 @@ async function getPublicKey(idToken: string) : Promise<KeyLike | Uint8Array>{
     }
     return rsaPublicKey;
 }
-async function setUpLoginUser(idToken: string,rsaPublicKey: KeyLike | Uint8Array) {
+async function setUpLoginUser(idToken: string,rsaPublicKey: any) {
     const verifyRes= await jose.jwtVerify(idToken,rsaPublicKey)
     const userStore1 = userStore();
     userStore1.userInfo = verifyRes.payload as UserResDto
