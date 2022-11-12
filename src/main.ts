@@ -22,7 +22,6 @@ app.use(oAuth2LibPlugin,{
         "http://10.20.10.114/oAuthe2Test/redirect" : "http://127.0.0.1:5173/oAuth2RedirectPage",
     client_id: "wisolMain",
     state: "cef",
-
 })
 
 app.mount('#app')

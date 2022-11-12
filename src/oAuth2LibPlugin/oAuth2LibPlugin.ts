@@ -5,7 +5,6 @@ import {inject, ref} from "vue";
 import axios from "axios";
 import * as jose from 'jose'
 import type {KeyLike} from "jose/dist/types/types";
-import type {Router} from "vue-router";
 
 export type UserResDto = {
     department: string|null,
@@ -32,7 +31,7 @@ const oauth2Info = {
 
 let refreshTokenSch = -1
 let rsaPublicKey: any = null
-let router: Router| null = null
+let appInstance : App | null= null
 export default {
     install: (app: App, options: {
         authServer_uri: string,
@@ -43,13 +42,12 @@ export default {
         redirect_uri: string,
         client_id: string,
         state: string,
-        router: Router
     }) => {
-        console.log("plgin install start")
         const pinia = getActivePinia()
         if (!pinia) {
             app.use(createPinia())
         }
+        appInstance = app
         oauth2Info.authServer_uri = options.authServer_uri
         oauth2Info.redirect_uri = options.redirect_uri
         oauth2Info.client_id = options.client_id
@@ -58,8 +56,7 @@ export default {
         oauth2Info.verified_uri = options.verified_uri
         oauth2Info.authServerLogout_uri = options.authServerLogout_uri
         oauth2Info.tokenRevoke_uri = options.tokenRevoke_uri
-        router = options.router
-        userStore();
+
         const wReToken = localStorage.getItem("wReToken")
         if(!wReToken) {
             return
@@ -114,7 +111,7 @@ export async function setupRedirect () {
         throw Error("need set token_uri or need set redirect_uri")
     }
     const formData = new FormData()
-    const query: any = router!.currentRoute.value.query
+    const query: any = appInstance!.config.globalProperties.$router!.currentRoute.value.query
     formData.append("grant_type","authorization_code")
     formData.append("code", query.code)
     formData.append("state", query.state)

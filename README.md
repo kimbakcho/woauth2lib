@@ -58,7 +58,7 @@ app.use(oAuth2LibPlugin,{
     redirect_uri: import.meta.env.PROD ?
         "http://10.20.10.114/oAuthe2Test/redirect" : "http://127.0.0.1:5173/oAuth2RedirectPage",
     client_id: "wisolMain",
-    state: "cef"
+    state: "cef",
 })
 ```
 ---
@@ -108,7 +108,7 @@ onMounted(async ()=>{
 
 <script setup lang="ts">
 
-import {goLogInPage, logoutOauth2Complete} from "woauth2lib/lib/oAuth2LibPlugin"
+import { goLogInPage , logoutOauth2Complete} from "woauth2lib/lib/oAuth2LibPlugin"
 
 function goOatuth2() {
   goLogInPage()
