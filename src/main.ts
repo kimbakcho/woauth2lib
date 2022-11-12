@@ -21,7 +21,8 @@ app.use(oAuth2LibPlugin,{
     redirect_uri: import.meta.env.PROD ?
         "http://10.20.10.114/oAuthe2Test/redirect" : "http://127.0.0.1:5173/oAuth2RedirectPage",
     client_id: "wisolMain",
-    state: "cef"
+    state: "cef",
+
 })
 
 app.mount('#app')

@@ -43,6 +43,8 @@ export default router
 ### main.ts
 ```typescript
 //Pinia모듈 사용 함으로 설치 필요
+import { setupRedirect } from "woauth2lib/lib/oAuth2LibPlugin"
+
 app.use(createPinia())
 
 app.use(router)
@@ -72,7 +74,7 @@ app.use(oAuth2LibPlugin,{
 <script setup lang="ts">
 
 import {onMounted} from "vue";
-import {setupRedirect} from "@/oAuth2LibPlugin/oAuth2LibPlugin";
+import { setupRedirect } from "woauth2lib/lib/oAuth2LibPlugin"
 import router from "@/router";
 onMounted(async ()=>{
   try{
@@ -106,7 +108,7 @@ onMounted(async ()=>{
 
 <script setup lang="ts">
 
-import {goLogInPage, logoutOauth2Complete} from "@/oAuth2LibPlugin/oAuth2LibPlugin";
+import {goLogInPage, logoutOauth2Complete} from "woauth2lib/lib/oAuth2LibPlugin"
 
 function goOatuth2() {
   goLogInPage()
