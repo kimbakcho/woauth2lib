@@ -1,40 +1,122 @@
-# woauth2lib
+# wisol Oauth2 로그인 Front 모듈 
+## install 
 
-This template should help get you started developing with Vue 3 in Vite.
+``
+npm install https://github.com/kimbakcho/woauth2lib
+``
 
-## Recommended IDE Setup
+### 사용법
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+### 라우터 설치 router/index.ts
+```vue
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
 
-## Type Support for `.vue` Imports in TS
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
+    {
+      path: '/about',
+      name: 'about',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/AboutView.vue')
+    },
+    {
+      //Redirect 페이지
+      path: "/oAuth2RedirectPage",
+      name: 'oAuth2RedirectPage',
+      component: () => import('../views/RedirectPage.vue')
+    }
+  ]
+})
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+export default router
 ```
+---
+### main.ts
+```typescript
+//Pinia모듈 사용 함으로 설치 필요
+app.use(createPinia())
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
+app.use(router)
+//Oauth2 설정
+app.use(oAuth2LibPlugin,{
+    authServer_uri: "http://10.20.10.114/wOauth2/o/authorize/",
+    authServerLogout_uri: "http://10.20.10.114/wOauth2/logout/",
+    token_uri:"http://localhost:9000/r/token/",
+    verified_uri: "http://localhost:9000/r/verified/",
+    tokenRevoke_uri:"http://localhost:9000/r/revoke/",
+    redirect_uri: import.meta.env.PROD ?
+        "http://10.20.10.114/oAuthe2Test/redirect" : "http://127.0.0.1:5173/oAuth2RedirectPage",
+    client_id: "wisolMain",
+    state: "cef"
+})
 ```
+---
 
-### Type-Check, Compile and Minify for Production
+### Redirect Page 에 설치 (../views/RedirectPage.vue)
+```vue
+<template>
+  <div>
+    로그인중
+  </div>
+</template>
 
-```sh
-npm run build
+<script setup lang="ts">
+
+import {onMounted} from "vue";
+import {setupRedirect} from "@/oAuth2LibPlugin/oAuth2LibPlugin";
+import router from "@/router";
+onMounted(async ()=>{
+  try{
+    await setupRedirect()
+    await router.push({
+      path:"/"
+    })  
+  }catch (e) {
+    console.log("로그인 에러")
+  }
+})
+</script>
+
+<style scoped lang="scss">
+
+</style>
+```
+---
+### 로그인 페이지 가기 와 로그아웃
+```vue
+<template>
+  <div>
+    <button @click="goOatuth2">
+      로그인 하러 가기
+    </button>
+    <button @click="logout">
+      로그 아웃
+    </button>
+  </div>
+</template>
+
+<script setup lang="ts">
+
+import {goLogInPage, logoutOauth2Complete} from "@/oAuth2LibPlugin/oAuth2LibPlugin";
+
+function goOatuth2() {
+  goLogInPage()
+}
+function logout(){
+  logoutOauth2Complete()
+}
+</script>
+
+<style >
+</style>
+
 ```

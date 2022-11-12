@@ -8,8 +8,16 @@
 
 import {onMounted} from "vue";
 import {setupRedirect} from "@/oAuth2LibPlugin/oAuth2LibPlugin";
-onMounted(()=>{
-  setupRedirect()
+import router from "@/router";
+onMounted(async ()=>{
+  try{
+    await setupRedirect()
+    await router.push({
+      path:"/"
+    })
+  }catch (e) {
+    console.log("로그인 에러")
+  }
 })
 </script>
 
