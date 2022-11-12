@@ -3,7 +3,6 @@ import {createPinia, defineStore, getActivePinia} from "pinia";
 import {ref} from "vue";
 
 import axios from "axios";
-import * as jose from 'jose'
 
 export type UserResDto = {
     department: string|null,
@@ -78,38 +77,15 @@ export function goLogInPage () {
         `scope=openid`
 }
 
-async function getPublicKey(idToken: string) : Promise<any>{
+function getPayloadFromIdToken(idToken: string): UserResDto{
     const sToken = idToken.split(".");
     const header: any = JSON.parse(atob(sToken[0]))
     const payload: any = JSON.parse(atob(sToken[1]))
-    const jwkUrl = `${payload.iss}/.well-known/jwks.json`
-    const jwks = await axios.get(jwkUrl)
-    const key = jwks.data.keys.filter((x: any)=>{
-        return x.kid == header.kid
-    })
-    let rsaPublicKey = null
-    if(key){
-        console.log("getPublicKey1")
-        console.log(key[0])
-        console.log(header.alg)
-        rsaPublicKey= await jose.importJWK({
-            kty: key[0].kty,
-            e: key[0].e,
-            n: key[0].n
-        },header.alg)
-        console.log("getPublicKey2")
-    }else {
-        throw Error("jwk key error")
-    }
-    if(!rsaPublicKey){
-        throw Error("rsaPublicKey error")
-    }
-    return rsaPublicKey;
+    return payload
 }
-async function setUpLoginUser(idToken: string,rsaPublicKey: any) {
-    const verifyRes= await jose.jwtVerify(idToken,rsaPublicKey)
+function setUpLoginUser(idToken: string) {
     const userStore1 = userStore();
-    userStore1.userInfo = verifyRes.payload as UserResDto
+    userStore1.userInfo = getPayloadFromIdToken(idToken)
     userStore1.isLogin = true
     axios.defaults.headers.common['Authorization'] = "Bearer "+idToken
 }
@@ -136,10 +112,7 @@ export async function setupRedirect () {
         let idToken = res.data.id_token;
         localStorage.setItem("wTokenOpenid",idToken)
         localStorage.setItem("wReToken",res.data.refresh_token)
-        rsaPublicKey = await getPublicKey(idToken)
-        console.log("setupRedirect1")
-        await setUpLoginUser(idToken,rsaPublicKey)
-        console.log("setupRedirect2")
+        setUpLoginUser(idToken)
         if(refreshTokenSch>=0){
             clearTimeout(refreshTokenSch)
         }
@@ -191,10 +164,8 @@ async function reFreshTokenLogin() {
         let refreshToken = token.data.refresh_token;
         localStorage.setItem("wReToken",refreshToken)
         let idToken = token.data.id_token;
-        if(!rsaPublicKey){
-            rsaPublicKey = await getPublicKey(idToken)
-        }
-        await setUpLoginUser(idToken,rsaPublicKey)
+
+        setUpLoginUser(idToken)
         reTokenSch()
     }catch (e) {
         console.log(e)
