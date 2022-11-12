@@ -136,6 +136,7 @@ export async function setupRedirect () {
         }
         reTokenSch()
     }catch (e) {
+        console.log(e)
         throw e
     }
 }
@@ -200,10 +201,9 @@ function reTokenSch(){
 }
 
 export async function logoutOauth2Complete() {
+    await axios.post(`${oauth2Info.authServerLogout_uri}`)
     await removeToken()
-    await axios.post(`${oauth2Info.authServerLogout_uri}`,null,{
-        withCredentials: true
-    })
+
     if(refreshTokenSch>=0){
         clearTimeout(refreshTokenSch)
     }
