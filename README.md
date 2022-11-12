@@ -43,7 +43,7 @@ export default router
 ### main.ts
 ```typescript
 //Pinia모듈 사용 함으로 설치 필요
-import { setupRedirect } from "woauth2lib/lib/oAuth2LibPlugin"
+import oAuth2LibPlugin from "woauth2lib/lib/oAuth2LibPlugin"
 
 app.use(createPinia())
 
