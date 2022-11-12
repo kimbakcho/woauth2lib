@@ -92,7 +92,6 @@ async function getPublicKey(idToken: string) : Promise<any>{
         console.log("getPublicKey1")
         console.log(key[0])
         console.log(header.alg)
-        debugger
         rsaPublicKey= await jose.importJWK({
             kty: key[0].kty,
             e: key[0].e,
