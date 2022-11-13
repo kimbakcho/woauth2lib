@@ -63,7 +63,6 @@ export default {
             clearTimeout(refreshTokenSch)
         }
         reFreshTokenLogin()
-        console.log("plgin installed")
     }
 }
 
