@@ -20,7 +20,7 @@ const router = createRouter({
     {
       path: "/oAuth2RedirectPage",
       name: 'oAuth2RedirectPage',
-      component: () => import('../views/RedirectPage.vue')
+      component: () => import('../oAuth2LibPlugin/RedirectLoginView.vue')
     }
   ]
 })
