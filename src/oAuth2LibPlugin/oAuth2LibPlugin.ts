@@ -180,10 +180,11 @@ function reTokenSch(){
 }
 
 export async function logoutOauth2Complete() {
+    await removeToken()
     await axios.post(`${oauth2Info.authServerLogout_uri}`,null,{
         withCredentials: true
     })
-    await removeToken()
+
 
     if(refreshTokenSch>=0){
         clearTimeout(refreshTokenSch)
