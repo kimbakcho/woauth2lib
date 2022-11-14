@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import {onMounted} from "vue";
-import {setupRedirect} from "@/oAuth2LibPlugin/oAuth2LibPlugin";
+import {setupRedirect} from "woauth2lib/lib/oAuth2LibPlugin";
 import router from "@/router";
 onMounted(async ()=>{
   try{
