@@ -188,6 +188,10 @@ export async function logoutOauth2Complete() {
     if(refreshTokenSch>=0){
         clearTimeout(refreshTokenSch)
     }
+
+    appInstance!.config.globalProperties.$router!.push({
+        path:"/"
+    })
 }
 
 
