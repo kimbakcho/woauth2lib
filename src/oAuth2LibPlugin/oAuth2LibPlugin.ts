@@ -58,6 +58,9 @@ export default {
 
         const wReToken = localStorage.getItem("wReToken")
         if(!wReToken) {
+            if(options.done){
+                options.done()
+            }
             return
         }
         if(refreshTokenSch>=0){
