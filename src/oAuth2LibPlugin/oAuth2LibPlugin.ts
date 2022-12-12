@@ -40,7 +40,7 @@ export default {
         redirect_uri: string,
         client_id: string,
         state: string,
-        done: Function
+        done: Function | null | undefined
     }) => {
         const pinia = getActivePinia()
         if (!pinia) {
@@ -66,7 +66,9 @@ export default {
         try{
             await reFreshTokenLogin()
         }finally {
-            options.done()
+            if(options.done){
+                options.done()
+            }
         }
     }
 }
