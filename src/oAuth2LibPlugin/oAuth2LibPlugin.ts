@@ -31,7 +31,7 @@ let refreshTokenSch = -1
 let rsaPublicKey: any = null
 let appInstance : App | null= null
 export default {
-    install: (app: App, options: {
+    install: async (app: App, options: {
         authServer_uri: string,
         authServerLogout_uri: string
         token_uri: string,
@@ -40,6 +40,7 @@ export default {
         redirect_uri: string,
         client_id: string,
         state: string,
+        done: Function
     }) => {
         const pinia = getActivePinia()
         if (!pinia) {
@@ -62,7 +63,11 @@ export default {
         if(refreshTokenSch>=0){
             clearTimeout(refreshTokenSch)
         }
-        reFreshTokenLogin()
+        try{
+            await reFreshTokenLogin()
+        }finally {
+            options.done()
+        }
     }
 }
 
