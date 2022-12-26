@@ -7,7 +7,8 @@ import axios from "axios";
 export type UserResDto = {
     department: string|null,
     sub: string|null,
-    role: string|null
+    role: string|null,
+    username: string|null
 }
 
 export const userStore = defineStore('userStore', () => {
