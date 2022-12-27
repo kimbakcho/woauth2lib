@@ -69,8 +69,12 @@ const installOAuth2Lib = function () {
     })
 }
 
-await installOAuth2Lib()
-app.mount('#app')
+
+(async () => {
+    await installOAuth2Lib()
+    app.mount('#app')
+})()
+
 ```
 ---
 
