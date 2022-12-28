@@ -41,9 +41,11 @@ export default router
 ```
 ---
 ### main.ts
+
 ```typescript
 //Pinia모듈 사용 함으로 설치 필요
 import oAuth2LibPlugin from "woauth2lib/lib/oAuth2LibPlugin"
+import axios from "axios";
 
 app.use(createPinia())
 
@@ -62,7 +64,8 @@ const installOAuth2Lib = function () {
                 "http://10.20.10.114/oAuthe2Test/loginRedirectView" : "http://127.0.0.1:5173/oAuthe2Test/loginRedirectView",
             client_id: "wisolMain",
             state: "cef",
-            done: ()=>{
+            axios: axios,
+            done: () => {
                 resolve('')
             }
         })
