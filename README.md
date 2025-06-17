@@ -51,6 +51,16 @@ app.use(createPinia())
 
 app.use(router)
 //Oauth2 설정
+    
+//로그인 완료 콜백
+export async function handleDoneCallback(){
+    const userStore1 = userStore();
+    console.log("handleDoneCallback")
+    if (userStore1 && userStore1.isLogin) {
+
+
+    }
+}
 
 const installOAuth2Lib = function () {
     return new Promise(resolve => {
@@ -65,7 +75,8 @@ const installOAuth2Lib = function () {
             client_id: "wisolMain",
             state: "cef",
             axios: axios,
-            done: () => {
+            done: async () => {
+                await handleDoneCallback()
                 resolve('')
             }
         })
