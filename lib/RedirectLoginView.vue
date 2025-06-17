@@ -10,9 +10,18 @@
 import {onMounted} from "vue";
 import {setupRedirect} from "woauth2lib/lib/oAuth2LibPlugin";
 import router from "@/router";
+let handleDoneCallback: () => Promise<void> = async () => {};
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  handleDoneCallback = require("@/main.ts").handleDoneCallback;
+} catch (e) {
+  // 임포트 실패 시 무시
+}
+
 onMounted(async ()=>{
   try{
     await setupRedirect()
+    await handleDoneCallback()
     await router.push({
       path:"/"
     })
