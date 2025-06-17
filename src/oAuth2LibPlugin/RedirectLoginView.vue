@@ -15,6 +15,7 @@ import router from "@/router";
 onMounted(async ()=>{
   try{
     await setupRedirect()
+    // @ts-ignore
     const mainModule = await import("@/main.ts").catch(() => null);
     if (mainModule && mainModule.handleDoneCallback) {
       await mainModule.handleDoneCallback();
